@@ -21,6 +21,17 @@
 
 using namespace std;
 using namespace llvm;
+// check if Type "ty" is a pointer to a defined class
+bool check_type(Type * ty, const map<string, bool> & clsn) {
+    if (!ty->isPointerTy())
+        return false;
+    Type * typ = ty->getPointerElementType();
+    if (!typ->isStructTy())
+        return false;
+    string name = typ->getStructName();
+    auto search = clsn.find(name);
+    return (search != clsn.end());
+}
 // main process
 ExitOnError ExitOnErr;
 int main(int argc, char** argv) {
@@ -90,23 +101,19 @@ int main(int argc, char** argv) {
                         Value * v = i.getOperand(0);
                         if (!isa<BitCastInst>(v))
                             continue;
-                        BitCastInst * b = cast<BitCastInst>(v);
-                        Value * v2 = b->getOperand(0);
-                        if (i.getName().startswith("vtable") || v2->getName().startswith("this")) {
-                            auto search = clsn.find(b->getSrcTy()->getPointerElementType()->getStructName());
-                            if (search == clsn.end())
-                                continue;
-                        } else {
-                            if (!isa<BitCastInst>(v2))
-                                continue;
-                            BitCastInst * b2 = cast<BitCastInst>(v2);
-                            Value * v3 = b2->getOperand(0);
-                            if (!v3->getName().startswith("this"))
-                                continue;
-                            auto search = clsn.find(b2->getSrcTy()->getPointerElementType()->getStructName());
-                            if (search == clsn.end())
-                                continue;
+                        Value * vt = v;
+                        bool found = false;
+                        while (isa<BitCastInst>(vt)) {
+                            BitCastInst * bt = cast<BitCastInst>(vt);
+                            Type * ty = bt->getSrcTy();
+                            if (check_type(ty, clsn)) {
+                                found = true;
+                                break;
+                            }
+                            vt = bt->getOperand(0);
                         }
+                        if (!found)
+                            continue;
                         // handle a special case (in constructors)
                         bool in_ctor = false;
                         for (pair<string, bool> vp : ctor)
@@ -118,6 +125,7 @@ int main(int argc, char** argv) {
                             continue;
                         errs() << "Find dispatch:" << i << "\n";
                         // dispatch found, make changes
+                        BitCastInst * b = cast<BitCastInst>(v);
                         LoadInst * t0 = new LoadInst(gvar_ivt, "", b);
                         BitCastInst * t1 = new BitCastInst(b->getOperand(0), Type::getInt64PtrTy(context), "", b);
                         LoadInst * t2 = new LoadInst(t1, "", b);
@@ -128,9 +136,6 @@ int main(int argc, char** argv) {
                         toDel.push_back(pair<Instruction *, Instruction *>(&i, t5));
                     } else if (i.getOpcode() == Instruction::Store) {
                         // looking for object creation
-                        Value * v = i.getOperand(1);
-                        if (!isa<BitCastInst>(v))
-                            continue;
                         string fullname;
                         raw_string_ostream str(fullname);
                         i.getOperand(0)->print(str);
@@ -145,12 +150,10 @@ int main(int argc, char** argv) {
                             continue;
                         errs() << "Find object creation (" << id << "):" << i << "\n";
                         // object creation found, make changes
-                        BitCastInst * b = cast<BitCastInst>(v);
-                        BitCastInst * t0 = new BitCastInst(b->getOperand(0), Type::getInt64PtrTy(context), "", b);
+                        BitCastInst * t0 = new BitCastInst(i.getOperand(1), Type::getInt64PtrTy(context), "", &i);
                         ConstantInt * ci = ConstantInt::getSigned(Type::getInt64Ty(context), id);
-                        new StoreInst(ci, t0, b);
-                        toDel.push_back(pair<Instruction *, Instruction *>(&i, 0));
-                        toDel.push_back(pair<Instruction *, Instruction *>(b, 0));
+                        StoreInst * t1 = new StoreInst(ci, t0, &i);
+                        toDel.push_back(pair<Instruction *, Instruction *>(&i, t1));
                     }
                 }
     // actually remove or replace instructions

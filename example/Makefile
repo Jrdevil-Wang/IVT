@@ -32,8 +32,8 @@ rec_ivt: rec.s cls.s $(CONGEN)
 	clang++ -lrt -lpthread $^ -o $@
 
 %.s: %.bcc
-#	llvm-dis $^ -o $^.ll
 	llc $^ -o $@
+#	llvm-dis $^ -o $^.ll
 
 %.bcc: %.bc $(CONFIG)
 	$(IVT) $^ > $@ 2>/dev/null

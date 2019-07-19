@@ -10,9 +10,28 @@ By using our IVT (Indexed Virtual Table), we can share polymorphic objects effic
 
 ## Environment:
 
-LLVM version 7.0.0, boost 1.54 and Ubuntu 14.04 are used when testing.
+Ubuntu 14.04, boost 1.54, and LLVM version 6.0.1 are used when testing.
 
 Please let me know if there are issues on other versions.
+
+### Setup Guide:
+
+The following command will install the boost library and other libraries that LLVM needs.
+
+<pre><code>sudo apt-get install libboost1.54-dev libncurses5-dev zlib1g-dev
+</code></pre>
+
+LLVM version 6.0.1 can be downloaded from:
+
+<pre><code>http://releases.llvm.org/6.0.1/clang+llvm-6.0.1-x86_64-linux-gnu-ubuntu-14.04.tar.xz
+</code></pre>
+
+After downloading the package, use the following command to install it.
+
+<pre><code>$ tar xvf clang+llvm-6.0.1-x86_64-linux-gnu-ubuntu-14.04.tar.xz
+$ cd clang+llvm-6.0.1-x86_64-linux-gnu-ubuntu-14.04.tar.xz
+$ sudo cp -R . /usr/local
+</code></pre>
 
 ## Compilation:
 

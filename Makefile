@@ -5,7 +5,7 @@ ifndef VERBOSE
 QUIET:=@
 endif
 
-LDFLAGS+=$(shell $(LLVM_CONFIG) --ldflags) -lpthread
+LDFLAGS+=$(shell $(LLVM_CONFIG) --ldflags) -lpthread -lncurses -lz
 COMMON_FLAGS=-Wall -Wextra
 CXXFLAGS+=$(COMMON_FLAGS) $(shell $(LLVM_CONFIG) --cxxflags)
 CPPFLAGS+=$(shell $(LLVM_CONFIG) --cppflags) -I$(SRC_DIR)
@@ -25,7 +25,7 @@ ivt_change: ivt_change.o
 
 ivt_gen: ivt_gen.o
 	@echo Linking $@
-	$(QUIET)$(CXX) -o $@ $(CXXFLAGS) $(LDFLAGS) $^ `$(LLVM_CONFIG) --libs bitreader core support nativecodegen`
+	$(QUIET)$(CXX) -o $@ $(COMMON_FLAGS) $^
 
 .PHONY:clean
 clean:
