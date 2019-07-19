@@ -18,7 +18,7 @@ Please let me know if there are issues on other versions.
 
 The following command will install the boost library and other libraries that LLVM needs.
 
-<pre><code>sudo apt-get install libboost1.54-dev libncurses5-dev zlib1g-dev
+<pre><code>$ sudo apt-get install libboost1.54-dev libncurses5-dev zlib1g-dev
 </code></pre>
 
 LLVM version 6.0.1 can be downloaded from:
@@ -29,7 +29,7 @@ LLVM version 6.0.1 can be downloaded from:
 After downloading the package, use the following command to install it.
 
 <pre><code>$ tar xvf clang+llvm-6.0.1-x86_64-linux-gnu-ubuntu-14.04.tar.xz
-$ cd clang+llvm-6.0.1-x86_64-linux-gnu-ubuntu-14.04.tar.xz
+$ cd clang+llvm-6.0.1-x86_64-linux-gnu-ubuntu-14.04
 $ sudo cp -R . /usr/local
 </code></pre>
 
