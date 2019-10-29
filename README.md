@@ -80,8 +80,11 @@ Run rec_ivt. If everything goes well, you can see the virtual methods are succes
 
 ## What to cite:
 
+Please cite our OOPSLA 2019 paper:
+
+```
 @article{DBLP:journals/pacmpl/0001HZTT19,
-  author    = {Yu{-}Ping Wang and
+   author    = {Yu{-}Ping Wang and
                Xu{-}Qiang Hu and
                Zi{-}Xin Zou and
                Wende Tan and
@@ -98,3 +101,4 @@ Run rec_ivt. If everything goes well, you can see the virtual methods are succes
   biburl    = {https://dblp.org/rec/bib/journals/pacmpl/0001HZTT19},
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
+```
