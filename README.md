@@ -78,8 +78,23 @@ Run snd_ivt, and leave it waiting for keyboard input until we see the result of 
 
 Run rec_ivt. If everything goes well, you can see the virtual methods are successfully called. This result shows that IVT works well.
 
-## Work on progress:
+## What to cite:
 
-Currently, the specification file is written by developer to designate the classes that involved in sharing.
-
-Static analysis tool could help to generate this specification. Since IVT does not introduce much overhead, we could simply generate a specification that includes all polymorphic classes.
+@article{DBLP:journals/pacmpl/0001HZTT19,
+  author    = {Yu{-}Ping Wang and
+               Xu{-}Qiang Hu and
+               Zi{-}Xin Zou and
+               Wende Tan and
+               Gang Tan},
+  title     = {{IVT:} an efficient method for sharing subtype polymorphic objects},
+  journal   = {{PACMPL}},
+  volume    = {3},
+  number    = {{OOPSLA}},
+  pages     = {130:1--130:22},
+  year      = {2019},
+  url       = {https://doi.org/10.1145/3360556},
+  doi       = {10.1145/3360556},
+  timestamp = {Mon, 21 Oct 2019 15:15:21 +0200},
+  biburl    = {https://dblp.org/rec/bib/journals/pacmpl/0001HZTT19},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
